@@ -18,7 +18,7 @@ def calc_fib(n,d):
             r = i+1
         if i == 3*r:
             break
-    print(a, r)
+    # print(a, r)
     return a[n%d]
 
 

@@ -6,7 +6,7 @@ def calc_fib(n):
         return 1
     a, b = 0,1
     for i in range(2, n+1):
-        a, b = b, a+b
+        a, b = b%10, (a+b)%10
     return b
 
 n = int(input())
