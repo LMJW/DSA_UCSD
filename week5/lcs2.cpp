@@ -9,22 +9,6 @@ struct pos {
   int y;
 };
 
-class Matrix {
-  int rows, cols;
-  int vals[];
-
- public:
-  Matrix(int, int);
-  int get(int r, int c) { return vals[r * cols + c]; };
-  void set(int r, int c, int v) { vals[r * cols + c] = v; };
-};
-
-Matrix::Matrix(int r, int c) {
-  rows = r;
-  cols = c;
-  int vals[r * c];
-}
-
 int threemin(int d, int y, int x, int& label) {
   label = 0;
   int v = d;
@@ -42,29 +26,23 @@ int threemin(int d, int y, int x, int& label) {
 int lcs2(vector<int>& a, vector<int>& b) {
   int n = a.size();
   int m = b.size();
+  std::vector<std::vector<int>> dp(n + 1, std::vector<int>(m + 1));
   // int dp[n + 1][m + 1];
   // Convert 2d array to 1d for simplicity
-  Matrix dp(n + 1, m + 1);
+  // int dp[(n + 1) * (m + 1)];
   for (int i = 0; i <= n; i++) {
     for (int j = 0; j <= m; j++) {
       if (i == 0) {
-        // dp[i][j] = j;
-        dp.set(i, j, j);
+        dp[i][j] = j;
       } else if (j == 0) {
-        // dp[i][j] = i;
-        dp.set(i, j, i);
+        dp[i][j] = i;
       } else {
         int dir;
-        // dp[i][j] = threemin(dp[i - 1][j - 1], dp[i][j - 1], dp[i - 1][j],
-        // dir);
-        int v = threemin(dp.get(i - 1, j - 1), dp.get(i, j - 1),
-                         dp.get(i - 1, j), dir);
-        dp.set(i, j, v);
+        dp[i][j] = threemin(dp[i - 1][j - 1], dp[i][j - 1], dp[i - 1][j], dir);
         if (dir == 0 && a[i - 1] == b[j - 1]) {
           ;
         } else {
-          // ++dp[i][j];
-          dp.set(i, j, v + 1);
+          ++dp[i][j];
         }
       }
     }
