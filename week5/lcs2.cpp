@@ -24,14 +24,14 @@ int threemin(int d, int y, int x, int& label) {
 }
 
 int lcs2(vector<int>& a, vector<int>& b) {
-  int n = a.size();
-  int m = b.size();
-  std::vector<std::vector<int>> dp(n + 1, std::vector<int>(m + 1));
+  int n = a.size();  // no. of cols
+  int m = b.size();  // no. of rows
+  std::vector<std::vector<int>> dp(m + 1, std::vector<int>(n + 1));
   // int dp[n + 1][m + 1];
   // Convert 2d array to 1d for simplicity
   // int dp[(n + 1) * (m + 1)];
-  for (int i = 0; i <= n; i++) {
-    for (int j = 0; j <= m; j++) {
+  for (int i = 0; i <= m; i++) {
+    for (int j = 0; j <= n; j++) {
       if (i == 0) {
         dp[i][j] = j;
       } else if (j == 0) {
@@ -54,7 +54,8 @@ int lcs2(vector<int>& a, vector<int>& b) {
   // points that can lead to the current position. Vaule is returned
   // by a reference vector.
   auto get_previous = [&](int i, int j) {
-    std::vector<pos> res;
+    std::vector<pos> res = {};
+    std::cout << res.size() << "::S??C";
     if (i > 0 && j > 0) {
       if (dp[i][j] - 1 == dp[i][j - 1]) {
         pos p = {i, j - 1};
@@ -86,6 +87,8 @@ int lcs2(vector<int>& a, vector<int>& b) {
   backtrace = [&](int i, int j) -> int {
     std::vector<pos> t = get_previous(i, j);
     int maxsub = 0;
+    std::cout << t.size() << i << " " << j << " \n";
+
     while (t.size() > 0) {
       for (auto& elem : t) {
         int tmp = backtrace(elem.x, elem.y);
@@ -99,7 +102,7 @@ int lcs2(vector<int>& a, vector<int>& b) {
     }
     return maxsub;
   };
-  int count = backtrace(n, m);
+  int count = backtrace(m, n);
   return count;
 }
 
