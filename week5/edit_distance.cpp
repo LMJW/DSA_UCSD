@@ -7,7 +7,7 @@ using std::string;
 int threemin(int diag, int y, int x, int& dir) {
   dir = 0;
   int v = diag;
-  if (diag > y) {
+  if (v > y) {
     dir = 1;
     v = y;
   }
@@ -32,7 +32,7 @@ int edit_distance(const string& str1, const string& str2) {
       } else {
         int dir;
         dp[i][j] = threemin(dp[i - 1][j - 1], dp[i - 1][j], dp[i][j - 1], dir);
-        if (dir == 0 && str1[i] == str2[j]) {
+        if (dir == 0 && str1[i - 1] == str2[j - 1]) {
           ;
         } else {
           ++dp[i][j];
@@ -40,34 +40,6 @@ int edit_distance(const string& str1, const string& str2) {
       }
     }
   }
-  // back track the path from dp matrix
-  // int i = n;
-  // int j = m;
-  // int t;
-  // while (i != 0 || j != 0) {
-  //   if (i > 0 && j > 0) {
-  //     t = threeminposition(dp[i - 1][j - 1], dp[i - 1][j], dp[i][j - 1]);
-  //     switch (t) {
-  //       case 0:
-  //         --i;
-  //         --j;
-  //         break;
-  //       case 1:
-  //         --j;
-  //         break;
-  //       case 2:
-  //         --i;
-  //         break;
-  //     }
-  //     ++count;
-  //   } else if (i == 0) {
-  //     --j;
-  //     ++count;
-  //   } else {
-  //     --i;
-  //     ++count;
-  //   }
-  // }
   return dp[n][m];
 }
 
