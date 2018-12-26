@@ -37,7 +37,8 @@ std::vector<pos> get_previous(std::vector<std::vector<int>>& dp,
       pos p = {i - 1, j};
       res.push_back(p);
     }
-    if (dp[i][j] == dp[i - 1][j - 1] && a[i - 1] == b[j - 1]) {
+    // notice about index for a, b vector
+    if (dp[i][j] == dp[i - 1][j - 1] && a[j - 1] == b[i - 1]) {
       pos p = {i - 1, j - 1};
       res.push_back(p);
     } else if (dp[i][j] - 1 == dp[i - 1][j - 1]) {
@@ -51,6 +52,13 @@ std::vector<pos> get_previous(std::vector<std::vector<int>>& dp,
     pos p = {i - 1, j};
     res.push_back(p);
   }
+  // std::cout << "pre: "
+  //           << " i: " << i << " j:" << j << " ; value = " << dp[i][j] << "
+  //           |";
+  // for (auto ee : res) {
+  //   std::cout << ee.x << " " << ee.y << " ";
+  // }
+  // std::cout << " \n";
   return res;
 }
 
@@ -59,13 +67,13 @@ int backtrace(std::vector<std::vector<int>>& dp,
               std::vector<int>& b,
               int i,
               int j) {
-  std::cout << "calling backtrace ... \n";
+  // std::cout << "calling backtrace ... \n";
   std::vector<pos> t{};
   t = get_previous(dp, a, b, i, j);
   int maxsub = 0;
 
-  for (int i = 0; i < t.size(); i++) {
-    pos elem = t[i];
+  for (int k = 0; k < t.size(); k++) {
+    pos elem = t[k];
 
     int tmp = backtrace(dp, a, b, elem.x, elem.y);
     if (dp[elem.x][elem.y] == dp[i][j]) {
@@ -75,6 +83,8 @@ int backtrace(std::vector<std::vector<int>>& dp,
       maxsub = tmp;
     }
   }
+  // std::cout << maxsub << ": "
+  //           << " |" << i << " " << j << " \n";
   return maxsub;
 }
 
@@ -94,13 +104,16 @@ int lcs2(vector<int>& a, vector<int>& b) {
       } else {
         int dir;
         dp[i][j] = threemin(dp[i - 1][j - 1], dp[i][j - 1], dp[i - 1][j], dir);
-        if (dir == 0 && a[i - 1] == b[j - 1]) {
+        //! Notice the row && col index; easy to make mistake
+        if (dir == 0 && a[j - 1] == b[i - 1]) {
           ;
         } else {
           ++dp[i][j];
         }
       }
+      // std::cout << dp[i][j] << " ";
     }
+    // std::cout << " \n";
   }
 
   // Back trace the path, and return the maximum
