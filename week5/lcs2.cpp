@@ -1,4 +1,3 @@
-#include <functional>
 #include <iostream>
 #include <vector>
 
@@ -21,6 +20,62 @@ int threemin(int d, int y, int x, int& label) {
     v = x;
   }
   return v;
+}
+
+std::vector<pos> get_previous(std::vector<std::vector<int>>& dp,
+                              std::vector<int>& a,
+                              std::vector<int>& b,
+                              int i,
+                              int j) {
+  std::vector<pos> res = {};
+  if (i > 0 && j > 0) {
+    if (dp[i][j] - 1 == dp[i][j - 1]) {
+      pos p = {i, j - 1};
+      res.push_back(p);
+    }
+    if (dp[i][j] - 1 == dp[i - 1][j]) {
+      pos p = {i - 1, j};
+      res.push_back(p);
+    }
+    if (dp[i][j] == dp[i - 1][j - 1] && a[i - 1] == b[j - 1]) {
+      pos p = {i - 1, j - 1};
+      res.push_back(p);
+    } else if (dp[i][j] - 1 == dp[i - 1][j - 1]) {
+      pos p = {i - 1, j - 1};
+      res.push_back(p);
+    };
+  } else if (i == 0 && j > 0) {
+    pos p = {i, j - 1};
+    res.push_back(p);
+  } else if (j == 0 && i > 0) {
+    pos p = {i - 1, j};
+    res.push_back(p);
+  }
+  return res;
+}
+
+int backtrace(std::vector<std::vector<int>>& dp,
+              std::vector<int>& a,
+              std::vector<int>& b,
+              int i,
+              int j) {
+  std::cout << "calling backtrace ... \n";
+  std::vector<pos> t{};
+  t = get_previous(dp, a, b, i, j);
+  int maxsub = 0;
+
+  for (int i = 0; i < t.size(); i++) {
+    pos elem = t[i];
+
+    int tmp = backtrace(dp, a, b, elem.x, elem.y);
+    if (dp[elem.x][elem.y] == dp[i][j]) {
+      ++tmp;
+    }
+    if (tmp > maxsub) {
+      maxsub = tmp;
+    }
+  }
+  return maxsub;
 }
 
 int lcs2(vector<int>& a, vector<int>& b) {
@@ -53,57 +108,10 @@ int lcs2(vector<int>& a, vector<int>& b) {
   // get_previous: given a point in dp matrix, return the possible
   // points that can lead to the current position. Vaule is returned
   // by a reference vector.
-  auto get_previous = [&dp, &a, &b](int i, int j) {
-    std::vector<pos> res = {};
-    if (i > 0 && j > 0) {
-      if (dp[i][j] - 1 == dp[i][j - 1]) {
-        pos p = {i, j - 1};
-        res.push_back(p);
-      }
-      if (dp[i][j] - 1 == dp[i - 1][j]) {
-        pos p = {i - 1, j};
-        res.push_back(p);
-      }
-      if (dp[i][j] == dp[i - 1][j - 1] && a[i - 1] == b[j - 1]) {
-        pos p = {i - 1, j - 1};
-        res.push_back(p);
-      } else if (dp[i][j] - 1 == dp[i - 1][j - 1]) {
-        pos p = {i - 1, j - 1};
-        res.push_back(p);
-      };
-    } else if (i == 0 && j > 0) {
-      pos p = {i, j - 1};
-      res.push_back(p);
-    } else if (j == 0 && i > 0) {
-      pos p = {i - 1, j};
-      res.push_back(p);
-    }
-    return res;
-  };
 
-  std::function<int(int, int)> backtrace;
   // recursive backtrace
-  backtrace = [&dp, &get_previous, &backtrace](int i, int j) -> int {
-    std::vector<pos> t{};
-    t = get_previous(i, j);
-    int maxsub = 0;
 
-    while (t.size() > 0) {
-      for (int i = 0; i < t.size(); i++) {
-        pos elem = t[i];
-
-        int tmp = backtrace(elem.x, elem.y);
-        if (dp[elem.x][elem.y] == dp[i][j]) {
-          ++tmp;
-        }
-        if (tmp > maxsub) {
-          maxsub = tmp;
-        }
-      }
-    }
-    return maxsub;
-  };
-  int count = backtrace(m, n);
+  int count = backtrace(dp, a, b, m, n);
   return count;
 }
 
