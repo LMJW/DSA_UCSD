@@ -53,9 +53,8 @@ int lcs2(vector<int>& a, vector<int>& b) {
   // get_previous: given a point in dp matrix, return the possible
   // points that can lead to the current position. Vaule is returned
   // by a reference vector.
-  auto get_previous = [&](int i, int j) {
+  auto get_previous = [&dp, &a, &b](int i, int j) {
     std::vector<pos> res = {};
-    std::cout << res.size() << "::S??C";
     if (i > 0 && j > 0) {
       if (dp[i][j] - 1 == dp[i][j - 1]) {
         pos p = {i, j - 1};
@@ -84,13 +83,15 @@ int lcs2(vector<int>& a, vector<int>& b) {
 
   std::function<int(int, int)> backtrace;
   // recursive backtrace
-  backtrace = [&](int i, int j) -> int {
-    std::vector<pos> t = get_previous(i, j);
+  backtrace = [&dp, &get_previous, &backtrace](int i, int j) -> int {
+    std::vector<pos> t{};
+    t = get_previous(i, j);
     int maxsub = 0;
-    std::cout << t.size() << i << " " << j << " \n";
 
     while (t.size() > 0) {
-      for (auto& elem : t) {
+      for (int i = 0; i < t.size(); i++) {
+        pos elem = t[i];
+
         int tmp = backtrace(elem.x, elem.y);
         if (dp[elem.x][elem.y] == dp[i][j]) {
           ++tmp;
