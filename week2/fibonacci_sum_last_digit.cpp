@@ -1,21 +1,46 @@
 #include <iostream>
+#include <vector>
+
+using std::vector;
 
 int fibonacci_sum_naive(long long n) {
     if (n <= 1)
         return n;
 
-    long long previous = 0;
-    long long current  = 1;
-    long long sum      = 1;
+    vector<long long> table = {0, 1};
+    vector<long long> sum = {0, 1};
 
-    for (long long i = 0; i < n - 1; ++i) {
-        long long tmp_previous = previous;
-        previous = current;
-        current = tmp_previous + current;
-        sum += current;
+    for (int i = 2;; ++i) {
+        int t = table[i - 1] + table[i - 2];
+        t %= 10;
+        table.push_back(t);
+        if (t == 1 && table[i - 1] == 0) {
+            break;
+        }
     }
+    int l = table.size() - 2;
 
-    return sum % 10;
+    for (int i = 2;; ++i) {
+        int t = sum[i - 1] + table[i % l];
+        t %= 10;
+        sum.push_back(t);
+        if (t == 1 && sum[i - 1] == 0) {
+            break;
+        }
+    }
+    int ll = sum.size() - 2;
+
+    // for (auto e : table) {
+    //     std::cout << e << " ";
+    // }
+    // std::cout << "\n";
+
+    // for (auto e : sum) {
+    //     std::cout << e << " ";
+    // }
+    // std::cout << "\n";
+
+    return sum[n % ll];
 }
 
 int main() {
