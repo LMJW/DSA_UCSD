@@ -18,10 +18,10 @@ long long get_fibonacci_huge_naive(long long n, long long m) {
     int l = table.size() - 1;
     int r = n % l;
 
-    for (auto e : table) {
-        std::cout << e << " ";
-    }
-    std::cout << " \n";
+    // for (auto e : table) {
+    //     std::cout << e << " ";
+    // }
+    // std::cout << " \n";
 
     return table[r];
 }
