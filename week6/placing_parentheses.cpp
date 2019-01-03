@@ -1,5 +1,6 @@
 #include <cassert>
 #include <iostream>
+#include <limits>
 #include <string>
 #include <vector>
 
@@ -87,65 +88,67 @@ long long get_maximum_value(const string& exp) {
             } else {
                 // dp[j][j+i] need (j,j+i-1) and (j+i,j+i)
                 //
-                long long t1;
-                long long t2;
-                long long t3;
-                long long t4;
-                long long t5;
-                long long t6;
-                long long t7;
-                long long t8;
-                long long vmax;
-                long long vmin;
-                t1 = eval(dpmax[j][j + i - 1], dpmax[j + i][j + i],
-                          ops[j + i - 1]);
-                t2 = eval(dpmax[j][j], dpmax[j + 1][j + i], ops[j]);
+                long long vmax = std::numeric_limits<long long>::min();
+                long long vmin = std::numeric_limits<long long>::max();
+                long long t;
+                for (int k = 0; k < i; ++k) {
+                    t = eval(dpmax[j][j + k], dpmax[j + k + 1][j + i],
+                             ops[j + k]);
+                    if (t > vmax) {
+                        vmax = t;
+                    }
+                    if (t < vmin) {
+                        vmin = t;
+                    }
 
-                t3 = eval(dpmin[j][j + i - 1], dpmin[j + i][j + i],
-                          ops[j + i - 1]);
-                t4 = eval(dpmin[j][j], dpmin[j + 1][j + i], ops[j]);
+                    t = eval(dpmin[j][j + k], dpmin[j + k + 1][j + i],
+                             ops[j + k]);
+                    if (t > vmax) {
+                        vmax = t;
+                    }
+                    if (t < vmin) {
+                        vmin = t;
+                    }
 
-                t5 = eval(dpmax[j][j + i - 1], dpmin[j + i][j + i],
-                          ops[j + i - 1]);
-                t6 = eval(dpmax[j][j], dpmin[j + 1][j + i], ops[j]);
+                    t = eval(dpmax[j][j + k], dpmin[j + k + 1][j + i],
+                             ops[j + k]);
+                    if (t > vmax) {
+                        vmax = t;
+                    }
+                    if (t < vmin) {
+                        vmin = t;
+                    }
 
-                t7 = eval(dpmin[j][j + i - 1], dpmax[j + i][j + i],
-                          ops[j + i - 1]);
-                t8 = eval(dpmin[j][j], dpmax[j + 1][j + i], ops[j]);
-
-                vmax = fourmax(t1, t2, t3, t4);
-                int tt = fourmax(t5, t6, t7, t8);
-                if (vmax < tt) {
-                    vmax = tt;
+                    t = eval(dpmin[j][j + k], dpmax[j + k + 1][j + i],
+                             ops[j + k]);
+                    if (t > vmax) {
+                        vmax = t;
+                    }
+                    if (t < vmin) {
+                        vmin = t;
+                    }
                 }
-
-                vmin = fourmin(t1, t2, t3, t4);
-                tt = fourmin(t5, t6, t7, t8);
-                if (vmin > tt) {
-                    vmin = tt;
-                }
-
                 dpmax[j][j + i] = vmax;
                 dpmin[j][j + i] = vmin;
             }
         }
     }
 
-    for (auto ele : dpmax) {
-        std::cout << "\n";
-        for (auto e : ele) {
-            std::cout << e << " ";
-        }
-    }
-    std::cout << "\ndpmax";
+    // for (auto ele : dpmax) {
+    //     std::cout << "\n";
+    //     for (auto e : ele) {
+    //         std::cout << e << " ";
+    //     }
+    // }
+    // std::cout << "\ndpmax";
 
-    for (auto ele : dpmin) {
-        std::cout << "\n";
-        for (auto e : ele) {
-            std::cout << e << " ";
-        }
-    }
-    std::cout << "\ndpmin";
+    // for (auto ele : dpmin) {
+    //     std::cout << "\n";
+    //     for (auto e : ele) {
+    //         std::cout << e << " ";
+    //     }
+    // }
+    // std::cout << "\ndpmin";
     return dpmax[0][n - 1];
 }
 
