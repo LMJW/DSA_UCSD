@@ -7,6 +7,7 @@ long long get_fibonacci_huge_naive(long long n, long long m) {
     vector<long long> table;
     table.push_back(0);
     table.push_back(1);
+
     for (long long i = 2;; ++i) {
         long long t = table[i - 1] + table[i - 2];
         t %= m;
@@ -15,7 +16,7 @@ long long get_fibonacci_huge_naive(long long n, long long m) {
             break;
         }
     }
-    int l = table.size() - 1;
+    int l = table.size() - 2;
     int r = n % l;
 
     // for (auto e : table) {
