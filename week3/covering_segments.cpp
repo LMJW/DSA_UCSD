@@ -4,45 +4,28 @@
 #include <vector>
 using std::vector;
 
+// Great explain
+// https://stackoverflow.com/questions/37936571/covering-segments-by-points
 struct Segment {
     int start, end;
 };
 
 bool sortSeg(Segment a, Segment b) {
-    return (a.start < b.start);
+    return (a.end < b.end);
 }
 
 vector<int> optimal_points(vector<Segment>& segments) {
     vector<int> points;
-    vector<Segment> overlap = {segments[0]};
-    bool hasoverlap;
-    for (size_t i = 1; i < segments.size(); ++i) {
-        hasoverlap = false;
-        for (int j = 0; j < overlap.size(); ++j) {
-            Segment p1 = segments[i];
-            Segment p2 = overlap[j];
-            if (p1.start > p2.start) {
-                p1 = overlap[j];
-                p2 = segments[i];
-            }
-            // p2 will have start larger than p1
-            // p2 is the overlap point
-            // p1 is the incoming point
-
-            if (p2.start <= p1.end) {
-                overlap[j].start = std::max(p1.start, p2.start);
-                overlap[j].end = std::min(p1.end, p2.end);
-                hasoverlap = true;
-            }
-            if (!hasoverlap) {
-                overlap.push_back(segments[i]);
-            }
+    std::sort(segments.begin(), segments.end(), sortSeg);
+    points.push_back(segments[0].end);
+    int p = 0;
+    for (int i = 1; i < segments.size(); ++i) {
+        if (segments[i].start < points[p]) {
+            continue;
+        } else {
+            points.push_back(segments[i].end);
+            ++p;
         }
-    }
-
-    std::sort(overlap.begin(), overlap.end(), sortSeg);
-    for (auto e : overlap) {
-        points.push_back(e.end);
     }
     return points;
 }
