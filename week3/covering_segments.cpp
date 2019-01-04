@@ -20,7 +20,7 @@ vector<int> optimal_points(vector<Segment>& segments) {
     points.push_back(segments[0].end);
     int p = 0;
     for (int i = 1; i < segments.size(); ++i) {
-        if (segments[i].start < points[p]) {
+        if (segments[i].start <= points[p]) {
             continue;
         } else {
             points.push_back(segments[i].end);
