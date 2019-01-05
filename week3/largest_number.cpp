@@ -45,6 +45,9 @@ string largest_number(vector<string> a) {
 
     string result;
     ret >> result;
+    if (result[0] == '0') {
+        return "0";
+    }
     return result;
 }
 
