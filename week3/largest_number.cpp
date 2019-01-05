@@ -8,21 +8,23 @@ using std::string;
 using std::vector;
 
 bool islargeorequal(string a, string b) {
-    int ll = std::max(a.size(), b.size());
+    int ll = a.size() + b.size();
+    // compare a|b && b|a
+    // if a|b > b|a
+    // we conclude a>b
+
     for (int i = 0; i < ll; ++i) {
         char m;
         char n;
-        if (i < a.size() && i < b.size()) {
-            char m = a[i];
-            char n = b[i];
-        } else if (i >= a.size()) {  // a string is the shorter string
-            int idx = i - a.size();
-            char m = b[idx];
-            char n = b[i];
-        } else if (i >= b.size()) {  // b string is the shorter string
-            int idx = i - b.size();
-            char m = a[i];
-            char n = a[idx];
+        if (i < a.size()) {
+            m = a[i];
+        } else {
+            m = b[i - a.size()];
+        }
+        if (i < b.size()) {
+            n = b[i];
+        } else {
+            n = a[i - b.size()];
         }
         if (m > n) {
             return true;
@@ -32,11 +34,7 @@ bool islargeorequal(string a, string b) {
             return false;
         }
     }
-    // this is still buggy
-    // given 323 32 && 191 19
-    // they behave differently
     return true;
-}
 }
 
 string largest_number(vector<string> a) {
