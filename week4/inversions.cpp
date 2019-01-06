@@ -13,7 +13,43 @@ long long get_number_of_inversions(vector<int>& a,
     size_t ave = left + (right - left) / 2;
     number_of_inversions += get_number_of_inversions(a, b, left, ave);
     number_of_inversions += get_number_of_inversions(a, b, ave, right);
-    // write your code here
+
+    int i = left;
+    int j = ave;
+
+    for (int k = 0; i + j - ave < right; ++k) {
+        if (i < ave && j < right) {
+            if (a[i] < a[j]) {
+                b[left + k] = a[i];
+                ++i;
+            } else {
+                b[left + k] = a[j];
+                ++j;
+                number_of_inversions += (ave - i);
+            }
+        } else if (i < ave) {
+            b[left + k] = a[i];
+            ++i;
+        } else {
+            b[left + k] = a[j];
+            ++j;
+        }
+    }
+    for (auto e : a) {
+        std::cout << e << " ";
+    }
+    std::cout << " A\n";
+
+    for (auto e : b) {
+        std::cout << e << " ";
+    }
+    std::cout << " b\n";
+    std::cout << number_of_inversions << " \n";
+    // a = b;
+    for (int i = left; i < right; ++i) {
+        a[i] = b[i];
+    }
+
     return number_of_inversions;
 }
 
