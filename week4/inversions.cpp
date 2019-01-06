@@ -35,16 +35,16 @@ long long get_number_of_inversions(vector<int>& a,
             ++j;
         }
     }
-    for (auto e : a) {
-        std::cout << e << " ";
-    }
-    std::cout << " A\n";
+    // for (auto e : a) {
+    //     std::cout << e << " ";
+    // }
+    // std::cout << " A\n";
 
-    for (auto e : b) {
-        std::cout << e << " ";
-    }
-    std::cout << " b\n";
-    std::cout << number_of_inversions << " \n";
+    // for (auto e : b) {
+    //     std::cout << e << " ";
+    // }
+    // std::cout << " b\n";
+    // std::cout << number_of_inversions << " \n";
     // a = b;
     for (int i = left; i < right; ++i) {
         a[i] = b[i];
