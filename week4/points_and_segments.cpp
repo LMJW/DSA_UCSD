@@ -1,52 +1,108 @@
 #include <algorithm>
 #include <iostream>
+#include <unordered_map>
 #include <vector>
 
+using std::unordered_map;
 using std::vector;
 
-bool sortint(int a, int b) {
-    return a < b;
-}
+vector<vector<int>> mergesort(vector<vector<int>> arr) {
+    if (arr.size() > 1) {
+        return arr;
+    }
+    int t = arr.size();
+    vector<vector<int>> res;
+    vector<vector<int>> left(arr.begin(), arr.begin() + t / 2);
+    vector<vector<int>> right(arr.begin() + t / 2, arr.end());
 
-int bsearch(vector<int> a, int b) {
+    left = mergesort(left);
+    right = mergesort(right);
     int i = 0;
-    int j = a.size();
-    while (i < j) {
-        int t = (i + j) / 2;
-        if (b > a[t]) {
-            i = t + 1;
-        } else if (b < a[t]) {
-            j = t;
+    int j = 0;
+
+    for (int c = 0; c < t; ++c) {
+        if (i < left.size() && j < right.size()) {
+            if (left[i][0] < right[j][0]) {
+                res.push_back(left[i]);
+                ++i;
+            } else if (left[i][0] > right[j][0]) {
+                res.push_back(right[j]);
+                ++j;
+            } else {
+                // if value equal, sort base on the second value
+                // base on analysis. left edge point should sort
+                // before target points, and then the right points
+                //
+                if (left[i][1] > right[j][1]) {
+                    res.push_back(left[i]);
+                    ++i;
+                } else if (left[i][1] < right[j][1]) {
+                    res.push_back(right[j]);
+                    ++j;
+                } else {
+                    std::cout << "should not happen\n";
+                }
+            }
+        } else if (i < left.size()) {
+            res.push_back(left[i]);
+            ++i;
         } else {
-            return t;
+            res.push_back(right[j]);
+            ++j;
         }
     }
-    return std::min(i, j);
+    return res;
 }
 
 vector<int> fast_count_segments(vector<int> starts,
                                 vector<int> ends,
                                 vector<int> points) {
     vector<int> cnt(points.size());
-    // write your code here
-    std::sort(starts.begin(), starts.end(), sortint);
-    std::sort(ends.begin(), ends.end(), sortint);
+
+    int total = starts.size() + ends.size() + points.size();
+    vector<vector<int>> allpoints;
+    unordered_map<int, int> pmap;
     for (int i = 0; i < points.size(); ++i) {
-        int e = points[i];
-        int left = bsearch(starts, e);
-        int right = bsearch(ends, e);
-        int t = 0;
-        if (e >= starts[left]) {
-            t += (left + 1);
-        } else {
-            t += left;
+        pmap.insert({i, 0});
+    }
+    // use length 2 vector to represent a point
+    // the first element is the point value
+    // the second element is the point type
+    // if it's the left point of a range, it equals to 1
+    // if it's the right end of a range, it equals to -1
+    // if it's a target point, it equals to 0
+    //
+    // The advantage of using 1, 0, -1 is that this is
+    // easy to calculate the end value.
+    //
+    // we can used the merge sort to solve all the points
+    // and finally use linear time to calculate all the
+    // points values.
+    for (int i = 0; i < starts.size(); ++i) {
+        allpoints.push_back(vector<int>(starts[i], 1));
+    }
+
+    for (int i = 0; i < ends.size(); ++i) {
+        allpoints.push_back(vector<int>(ends[i], -1));
+    }
+
+    for (int i = 0; i < points.size(); ++i) {
+        allpoints.push_back(vector<int>(points[i], 0));
+    }
+
+    auto res = mergesort(allpoints);
+
+    int i = 0;
+    int sum = 0;
+    for (auto ele : res) {
+        sum += ele[1];
+        auto search = pmap.find(ele[0]);
+        if (ele[1] == 0 && search != pmap.end()) {
+            pmap[ele[0]] = sum;
         }
-        if (e > ends[right]) {
-            t -= (right + 1);
-        } else {
-            t -= right;
-        }
-        cnt[i] = t;
+    }
+    for (int i = 0; i < points.size(); ++i) {
+        cnt[i] = pmap.find(points[i])->second;
     }
 
     return cnt;
