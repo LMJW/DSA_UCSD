@@ -62,7 +62,7 @@ vector<int> fast_count_segments(vector<int> starts,
     vector<vector<int>> allpoints;
     unordered_map<int, int> pmap;
     for (size_t i = 0; i < points.size(); ++i) {
-        pmap.insert({i, 0});
+        pmap[points[i]] = 0;
     }
     // use length 2 vector to represent a point
     // the first element is the point value
@@ -101,27 +101,22 @@ vector<int> fast_count_segments(vector<int> starts,
         sum += res[i].at(1);
         auto search = pmap.find(res[i][0]);
         if (res[i][1] == 0 && search != pmap.end()) {
-            // pmap[res[i][0]] = sum;
-            pmap.insert({res[i][0], sum});
+            pmap[res[i][0]] = sum;
         }
-        // std::cout << "??";
     }
 
-    // for (auto& ele : res) {
-
-    //     sum += ele[1];
-    //     auto search = pmap.find(ele[0]);
-    //     if (ele[1] == 0 && search != pmap.end()) {
-    //         pmap[ele[0]] = sum;
-    //     }
+    // unordered_map<int, int>::iterator itr;
+    // for (itr = pmap.begin(); itr != pmap.end(); ++itr) {
+    // std::cout << "map|" << itr->first << " " << itr->second << " \n";
     // }
+
     for (size_t i = 0; i < points.size(); ++i) {
         auto s = pmap.find(points[i]);
-        std::cout << points[i] << ";\n";
+        // std::cout << points[i] << ";\n";
         if (s != pmap.end()) {
             cnt[i] = s->second;
-        } else {
-            std::cout << "?\n";
+            // } else {
+            //     std::cout << "?\n";
         }
     }
 
