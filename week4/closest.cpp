@@ -97,6 +97,8 @@ double min_dis(vector<pair<int, int>> ps) {
                 if (v < d) {
                     d = v;
                 }
+            } else {
+                break;
             }
         }
     }
