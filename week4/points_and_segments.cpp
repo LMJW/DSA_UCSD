@@ -39,7 +39,9 @@ vector<vector<int>> mergesort(vector<vector<int>> arr) {
                     res.push_back(right[j]);
                     ++j;
                 } else {
-                    std::cout << "should not happen\n";
+                    // std::cout << "should not happen\n";
+                    res.push_back(right[j]);
+                    ++j;
                 }
             }
         } else if (i < left.size()) {
@@ -91,13 +93,7 @@ vector<int> fast_count_segments(vector<int> starts,
     auto res = mergesort(allpoints);
 
     int sum = 0;
-
     for (size_t i = 0; i < res.size(); ++i) {
-        // std::cout << res[i].size() << " |";
-        // for (auto e : res[i]) {
-        //     std::cout << e << " ";
-        // }
-        // std::cout << "\n";
         sum += res[i].at(1);
         auto search = pmap.find(res[i][0]);
         if (res[i][1] == 0 && search != pmap.end()) {
@@ -105,18 +101,10 @@ vector<int> fast_count_segments(vector<int> starts,
         }
     }
 
-    // unordered_map<int, int>::iterator itr;
-    // for (itr = pmap.begin(); itr != pmap.end(); ++itr) {
-    // std::cout << "map|" << itr->first << " " << itr->second << " \n";
-    // }
-
     for (size_t i = 0; i < points.size(); ++i) {
         auto s = pmap.find(points[i]);
-        // std::cout << points[i] << ";\n";
         if (s != pmap.end()) {
             cnt[i] = s->second;
-            // } else {
-            //     std::cout << "?\n";
         }
     }
 
@@ -151,4 +139,47 @@ int main() {
     for (size_t i = 0; i < cnt.size(); i++) {
         std::cout << cnt[i] << ' ';
     }
+
+    // for (int idd = 0; idd < 1000; ++idd) {
+    //     int n, m;
+    //     n = rand() % 10;
+    //     m = rand() % 15;
+    //     vector<int> starts(n), ends(n);
+    //     vector<int> points(m);
+
+    //     for (int i = 0; i < n; ++i) {
+    //         int a = rand() % 100;
+    //         int b = rand() % 100;
+    //         if (a < b) {
+    //             starts[i] = a;
+    //             ends[i] = b;
+    //         } else {
+    //             starts[i] = b;
+    //             ends[i] = a;
+    //         }
+    //     }
+
+    //     for (int i = 0; i < m; ++i) {
+    //         points[i] = rand() % 100;
+    //     }
+
+    //     try {
+    //         fast_count_segments(starts, ends, points);
+    //     } catch (...) {
+    //         for (auto e : starts) {
+    //             std::cout << "start:" << e << " ";
+    //         }
+    //         std::cout << "\n";
+
+    //         for (auto e : ends) {
+    //             std::cout << "start:" << e << " ";
+    //         }
+    //         std::cout << "\n";
+
+    //         for (auto e : points) {
+    //             std::cout << "start:" << e << " ";
+    //         }
+    //         std::cout << "\n";
+    //     }
+    // }
 }
