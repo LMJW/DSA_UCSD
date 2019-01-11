@@ -74,7 +74,7 @@ int backtrace(std::vector<std::vector<int>>& dp,
     t = get_previous(dp, a, b, i, j);
     int maxsub = 0;
 
-    for (int k = 0; k < t.size(); k++) {
+    for (size_t k = 0; k < t.size(); ++k) {
         pos elem = t[k];
 
         int tmp = backtrace(dp, a, b, elem.x, elem.y);
@@ -119,6 +119,12 @@ int lcs2(vector<int>& a, vector<int>& b) {
         // std::cout << " \n";
     }
 
+    for (auto row : dp) {
+        for (auto c : row) {
+            std::cout << c << " ";
+        }
+        std::cout << "\n";
+    }
     // Back trace the path, and return the maximum
 
     // get_previous: given a point in dp matrix, return the possible
