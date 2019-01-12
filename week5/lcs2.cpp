@@ -119,12 +119,12 @@ int lcs2(vector<int>& a, vector<int>& b) {
         // std::cout << " \n";
     }
 
-    for (auto row : dp) {
-        for (auto c : row) {
-            std::cout << c << " ";
-        }
-        std::cout << "\n";
-    }
+    // for (auto row : dp) {
+    //     for (auto c : row) {
+    //         std::cout << c << " ";
+    //     }
+    //     std::cout << "\n";
+    // }
     // Back trace the path, and return the maximum
 
     // get_previous: given a point in dp matrix, return the possible
