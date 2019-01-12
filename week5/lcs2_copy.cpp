@@ -1,14 +1,28 @@
+// #include "lcs2_copy.h"
 #include <unistd.h>
+#include <algorithm>
 #include <cstdlib>
 #include <iostream>
+#include <unordered_map>
 #include <vector>
 
+using std::unordered_map;
 using std::vector;
-
 struct pos {
     int x;
     int y;
+    bool operator==(const pos& p) const { return x == p.x && y == p.y; }
 };
+
+namespace std {
+template <>
+class hash<pos> {
+   public:
+    size_t operator()(const pos& p) const {
+        return hash<int>()(p.x) ^ hash<int>()(p.y);
+    }
+};
+};  // namespace std
 
 int threemin(int d, int y, int x) {
     int v = d;
@@ -70,16 +84,25 @@ int backtrace(std::vector<std::vector<int>>& dp,
               std::vector<int>& a,
               std::vector<int>& b,
               int i,
-              int j) {
+              int j,
+              unordered_map<pos, int>& hs) {
     // std::cout << "calling backtrace ... \n";
+
     std::vector<pos> t{};
     t = get_previous(dp, a, b, i, j);
     int maxsub = 0;
 
     for (size_t k = 0; k < t.size(); ++k) {
         pos elem = t[k];
+        int tmp;
 
-        int tmp = backtrace(dp, a, b, elem.x, elem.y);
+        unordered_map<pos, int>::iterator got = hs.find(elem);
+        if (got != hs.end()) {
+            tmp = got->second;
+        } else {
+            tmp = backtrace(dp, a, b, elem.x, elem.y, hs);
+        }
+
         if (dp[elem.x][elem.y] == dp[i][j] && elem.x == i - 1 &&
             elem.y == j - 1) {
             ++tmp;
@@ -88,8 +111,9 @@ int backtrace(std::vector<std::vector<int>>& dp,
             maxsub = tmp;
         }
     }
-    // std::cout << maxsub << ": "
-    //           << " |" << i << " " << j << " \n";
+    pos pp = {i, j};
+    hs.insert(std::make_pair(pp, maxsub));
+
     return maxsub;
 }
 
@@ -118,6 +142,8 @@ int lcs2(vector<int>& a, vector<int>& b) {
         }
     }
 
+    unordered_map<pos, int> hs;
+
     // Back trace the path, and return the maximum
 
     // get_previous: given a point in dp matrix, return the possible
@@ -126,7 +152,7 @@ int lcs2(vector<int>& a, vector<int>& b) {
 
     // recursive backtrace
 
-    int count = backtrace(dp, a, b, m, n);
+    int count = backtrace(dp, a, b, m, n, hs);
     return count;
 }
 
