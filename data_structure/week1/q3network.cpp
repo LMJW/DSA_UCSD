@@ -37,9 +37,10 @@ public:
             return Response(true, 0);
         } else {
             int last_finish_time = finish_time.back();
-            finish_time.push(last_finish_time + request.process_time);
+            int t = std::max(last_finish_time, request.arrival_time);
+            finish_time.push(t + request.process_time);
             finish_time.pop();
-            return Response(false, last_finish_time);
+            return Response(false, t);
         }
     };
 
