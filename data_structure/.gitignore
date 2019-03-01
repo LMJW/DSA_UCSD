@@ -1,3 +1,6 @@
 a.out.*
 *.a
 tests
+cmake-build-debug*
+CMakeLists.*
+.idea*

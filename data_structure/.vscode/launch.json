@@ -16,7 +16,9 @@
             "environment": [],
             "externalConsole": true,
             "MIMode": "lldb",
-            // "miDebuggerPath": "/Applications/Xcode.app/Contents/Developer/usr/bin/lldb-mi"
-        }
+            // "miDebuggerPath":
+            // "/Applications/Xcode.app/Contents/Developer/usr/bin/lldb-mi"
+            "miDebuggerPath": "/Users/will/.vscode/extensions/ms-vscode.cpptools-0.21.0/debugAdapters/lldb/bin/lldb-mi"
+        },
     ]
 }
