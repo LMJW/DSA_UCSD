@@ -4,3 +4,5 @@ tests
 cmake-build-debug*
 CMakeLists.*
 .idea*
+*.java
+*.py
