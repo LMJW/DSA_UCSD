@@ -39,13 +39,9 @@ std::vector<int> get_occurrences(const Data& input) {
     const string &s = input.pattern, t = input.text;
     vector<int> ans;
     // define the parameter for my own hash function
-    // int multiplier = 263
-    // prime number = 1000000007
+
     int ts = static_cast<int>(t.size());
     int ss = static_cast<int>(s.size());
-    int _MUL_ = 1;
-    for (int i = 0; i < ss; ++i)
-        _MUL_ *= MULTIPLIER;
 
     list<size_t> hashvals;
     for (int i = ts - ss; i > -1; --i) {
@@ -56,9 +52,9 @@ std::vector<int> get_occurrences(const Data& input) {
             long long t1 = (lv * MULTIPLIER) % PRIMAR;
             long long t2 = t[i];
             long long t3 = t[i + ss];
-            long long t4 = t3 * _MUL_ % PRIMAR;
-            lv = t1 + t2 - t4;
-            lv = (lv + PRIMAR) % PRIMAR;
+            for (int j = 0; j < ss; ++j)
+                t3 = (t3 * MULTIPLIER) % PRIMAR;
+            lv = (t1 + t2 - t3 + PRIMAR) % PRIMAR;
 
             hashvals.push_front(lv);
         }
